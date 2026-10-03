@@ -266,7 +266,7 @@ def triage(persona, candidates, targets, today):
         if status not in RULES["liveness_factor"]:
             held.append({**base, "gate": "G2",
                          "reason": "posting liveness never checked" if not live
-                                   else f"unrecognized liveness status {status!r}",
+                                   else f"liveness checker said {status!r}, which is neither live nor closed",
                          "next_action": f"Run: npm run ats:liveness -- {c.get('url')}"})
             continue
 
@@ -357,7 +357,7 @@ def build_report(log):
             comp_txt = f"{comp:.3f}" if isinstance(comp, (int, float)) else "—"
             L.append(f"| {r['company']} — {r['title']} | **{r['decision']}** | {comp_txt} | "
                      f"{sp['tier']} (p {sp['p']}; {sp['approvals']:g} approvals, "
-                     f"rate {sp['approval_rate']}%; {titles}) | {r['fit']} | "
+                     f"rate {'—' if sp['approval_rate'] is None else format(sp['approval_rate'], '.1f')}%; {titles}) | {r['fit']} | "
                      f"{lv.get('status')} ({lv.get('checked_on')}) | {r['timeline']} | "
                      f"{NEXT_ACTION.get(r['decision'], 'Human review.')} |")
         flags = [r for r in log["scored"] if r["sponsorship"]["tier"] == "None" and r["decision"] != "Skip"]
@@ -366,6 +366,12 @@ def build_report(log):
                   "record shows 0 approvals. Fit alone kept them above the Skip line:"]
             L += [f"- {r['company']} — {r['title']} ({r['decision']})" for r in flags]
 
+    weak = [r for r in log["scored"] if r["decision"] == "Apply" and r["fit"] < 0.5]
+    if weak:
+        L += ["", "**⚠ Needs a human (G4):** Apply here comes mainly from sponsorship, not fit "
+              "(fit < 0.5). A Proven sponsor alone contributes 0.9 × 0.35 = 0.315, which already "
+              "clears the 0.30 Apply threshold:"]
+        L += [f"- {r['company']} — {r['title']} (fit {r['fit']})" for r in weak]
     L += ["", "## Held at a gate (not scored, nothing invented)", ""]
     if not log["held"]:
         L.append("_None._")
