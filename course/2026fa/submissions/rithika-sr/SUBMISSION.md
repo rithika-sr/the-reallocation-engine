@@ -9,7 +9,7 @@ Prototype command: python3 scripts/contrib/2026fa/rithika-sr-ds-newgrad-h1b-15-2
 Test command: python3 -m unittest discover -s scripts/contrib/2026fa/rithika-sr-ds-newgrad-h1b-15-2051 -p "test_*.py" -v
 GitHub repository: https://github.com/rithika-sr/the-reallocation-engine
 Branch: contrib/2026fa-rithika-sr-ds-newgrad-h1b-15-2051
-PR URL: https://github.com/nikbearbrown/the-reallocation-engine/pull/NN
+PR URL: https://github.com/nikbearbrown/the-reallocation-engine/pull/22
 Submitted commit SHA: the commit that adds this file (HEAD of the PR branch). A file cannot contain its own commit's SHA, so the exact value is in the Canvas submission comment. Last content commit before it: b24e1190725ae66f2fab2876ec10a95874bfcea8
 Lifecycle stage claimed: RUNNABLE-SAMPLE
 
