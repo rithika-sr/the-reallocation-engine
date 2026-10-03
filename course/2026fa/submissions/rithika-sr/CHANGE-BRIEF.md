@@ -100,3 +100,33 @@ I will check it; results go in "Revisions" below.
 ## Revisions
 
 <!-- Add dated revisions here. Never edit the sections above. -->
+### Revision 1 — 2026-10-03 (after the fixture run, tests, and the real-CSV worked run)
+
+- **P1 confirmed.** On the real CSV, "data scientist" alone matches 89 companies;
+  adding aliases matches 111 (+22). But the "research scientist" alias pulled in
+  biotech lab roles (e.g. ADAPTIVE BIOTECHNOLOGIES CORP, C4 THERAPEUTICS INC),
+  so a better alias list adds "applied scientist" and rejects "research
+  scientist." In the fixtures, KITE METRICS CORP (12 approvals, Applied/ML
+  Scientist titles) was rated Likely instead of Proven.
+- **P2 confirmed.** 32 of 102 matched DS titles are Senior/Staff/Principal.
+  LINKEDIN CORP's only DS title is "Sr Data Scientist," yet it meets the Proven rule.
+- **P3 confirmed.** In the worked run, "Airbnb" and "Instacart" were held at G1.
+  The records list them as AIRBNB INC and MAPLEBEAR INC.
+- **P4 holds only if held roles count.** The scorer's own skip rate was 20%
+  (fixtures) and 25% (worked run), below 50%. Counting held roles, 5 of 9 and
+  5 of 8 roles never reached Apply/Consider.
+- **Not predicted:**
+  1. The liveness checker reported a builtin.com page **active** although the
+     page says the job was removed on Jun 11, 2025. That role (MAPLEBEAR INC)
+     scored Apply. Confirmed by opening the page by hand.
+  2. A Proven sponsor alone contributes 0.315, above the 0.30 Apply threshold,
+     so fit barely matters. Added a ⚠ report flag for Apply with fit < 0.5.
+  3. 28,812 of 30,369 CSV rows (94.9%) have blank approvals, so failure case 2
+     is the common case, not an edge case.
+  4. PELOTON INTERACTIVE INC and PELOTON INTERACTIVE LLC carry identical counts
+     (310 approvals, 97.48%), which looks like one record joined to two entities.
+  5. A 0-approval fixture company reached Consider (0.210) on fit alone; the
+     report flags it for a human.
+  6. `npm run doctor` does not count recipes under `recipes/cases/`, so it does
+     not check this recipe's TODO count; checked with `grep -c` instead (7 = 7).
+- All five failure cases in section 4 were exercised by `test_triage.py` (17 tests, OK).
